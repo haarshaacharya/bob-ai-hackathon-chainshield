@@ -1,0 +1,163 @@
+# Submission metadata for ChainShield hackathon entry
+
+team:
+  name: "[NEEDS INPUT: Team name]"
+  track: "[NEEDS INPUT: Hackathon track]"
+  lead:
+    name: "[NEEDS INPUT: Team lead name]"
+    email: "[NEEDS INPUT: Team lead email]"
+  members:
+    - name: "[NEEDS INPUT: Member 1 name]"
+      email: "[NEEDS INPUT: Member 1 email]"
+    - name: "[NEEDS INPUT: Member 2 name]"
+      email: "[NEEDS INPUT: Member 2 email]"
+    - name: "[NEEDS INPUT: Member 3 name]"
+      email: "[NEEDS INPUT: Member 3 email]"
+
+submission:
+  title: "ChainShield: Explainable Supply-Chain Resilience Copilot"
+
+  problem_statement: |
+    Supply-chain disruptions (port closures, weather events, strikes) cascade across hundreds of shipments within minutes, but operations teams lack real-time visibility into which cargo is affected, what alternatives exist, and whether temperature-sensitive products are already at risk. Cold-chain monitoring systems detect excursions only after damage occurs. Manual rerouting decisions consume hours while cargo value and customer commitments are lost. Teams need to convert raw disruption signals and sensor anomalies into verified operational actions in under 60 seconds.
+
+  solution_summary: |
+    ChainShield is an explainable crisis-response system that converts active supply-chain disruptions and cold-chain sensor anomalies into ranked, auditable actions. The system identifies affected shipments using graph-based route overlap and time-window analysis, recommends feasible rerouting and carrier alternatives constrained by capacity and deadline, identifies idle compatible assets for redeployment, and detects temperature excursions before delivery using configurable policy profiles. Every recommendation includes evidence links, reason codes, and confidence indicators; the language model explains deterministic results rather than generating operational truth.
+
+  key_features:
+    - "Real-time disruption impact analysis using graph-based route overlap and time-window matching to identify affected shipments and quantify cargo value at risk"
+    - "Ranked route and carrier alternatives with hard-constraint validation (capacity, delivery deadline, reefer capability) and cost/delay tradeoffs"
+    - "Idle asset matching and redeployment recommendations with repositioning distance and compatibility scoring"
+    - "Deterministic cold-chain policy engine with configurable temperature thresholds, excursion detection, and policy-driven severity classification"
+    - "Explainable action plans with evidence links, reason codes, and confidence indicators; language model explains structured results rather than inventing decisions"
+
+  technology_stack:
+    backend: "Python 3.12 + FastAPI"
+    frontend: "React + TypeScript + Vite"
+    data_processing: "Polars, DuckDB, Parquet"
+    graph_and_routing: "NetworkX, Google OR-Tools"
+    geospatial: "GeoPandas, Shapely"
+    map_ui: "MapLibre GL JS"
+    ai_explanation: "IBM watsonx.ai (Granite 3.3 8B Instruct)"
+    development_partner: "IBM Bob IDE"
+    deployment: "Docker Compose"
+
+  required_functions_addressed:
+    - function: "Identify shipments affected by an active disruption"
+      implementation: "Impact Engine uses graph-based route overlap and time-window matching to identify affected shipments and quantify cargo value at risk. Every affected shipment includes reason codes (PORT_NODE_BLOCKED, ETA_SLA_BREACH, TEMPERATURE_EXPOSURE_INCREASED)."
+
+    - function: "Recommend rerouting options"
+      implementation: "Optimization Engine uses Google OR-Tools to generate feasible route alternatives constrained by capacity, delivery deadline, reefer capability, and carrier availability. Routes are ranked by arrival delay, cost, and disruption risk."
+
+    - function: "Recommend carrier alternatives"
+      implementation: "For each rerouting option, the system checks carrier availability and equipment compatibility. Carriers are ranked by capacity, reefer capability, and availability time. Unavailable carriers are explicitly marked."
+
+    - function: "Identify idle fleet assets for redeployment"
+      implementation: "Asset matching engine queries idle assets (status = available) and filters by mode, reefer capability, capacity, and availability time. Assets are ranked by repositioning distance and utilization potential."
+
+    - function: "Monitor cold-chain IoT sensor logs"
+      implementation: "Cold Chain Engine processes sensor readings from DuckDB, sorts by timestamp, and aggregates by shipment. Sensor data quality is assessed (gaps, battery warnings, frozen values)."
+
+    - function: "Detect temperature excursions before delivery"
+      implementation: "Excursion detection identifies readings outside policy range, calculates duration and cumulative excursion, and detects patterns (spike, drift, door-open, sensor failure). Excursions are flagged before delivery."
+
+    - function: "Classify excursion severity against a regulatory or configured policy profile"
+      implementation: "Cold Chain Engine loads configurable policy profiles (min/max temperature, max excursion duration, severity rules). Excursions are classified as SAFE, OUT_OF_RANGE, EXCURSION_REVIEW, URGENT_ESCALATION, or POLICY_REQUIRED. No hardcoded regulatory claims are made."
+
+  ibm_bob_usage: |
+    IBM Bob IDE was used as the core development partner throughout the project:
+    - Architecture and scope planning (task 01_architecture_and_scope.md)
+    - Data contracts and schema design (task 02_data_contracts.md)
+    - Impact engine implementation (task 03_impact_engine.md)
+    - Route optimizer implementation (task 04_route_optimizer.md)
+    - Cold-chain policy engine implementation (task 05_cold_chain_policy_engine.md)
+    - Frontend control tower development (task 06_frontend_control_tower.md)
+    - Testing and hardening (task 07_tests_and_hardening.md)
+    - Demo fallback and offline mode (task 08_demo_fallback.md)
+    - Documentation and repository review (task 09_documentation_and_repository_review.md)
+    All relevant task histories and consumption screenshots are exported to the bob_sessions/ folder.
+
+  demo_mode: |
+    The system operates in full offline demo mode with:
+    - Cached route graph (Parquet)
+    - Synthetic shipment, asset, and sensor data
+    - Precomputed disruption scenarios
+    - Deterministic fallback explanations
+    - No external API dependencies required
+    - No watsonx.ai credentials required
+    - No network access required
+
+  offline_capability: |
+    All core logic runs locally with cached data. External APIs (watsonx.ai, Cloudant, routing services) are optional and have timeouts and fallbacks. The system is designed to be resilient to live-demo failure.
+
+  regulatory_scope: |
+    The system uses configurable policy profiles for cold-chain classification. Demo profiles are based on CDC vaccine storage guidelines but are not authoritative for any specific product or jurisdiction. All excursion classifications require manual review unless an explicit policy profile permits automated disposition. No unsupported regulatory claims are made.
+
+  data_compliance: |
+    - No personal information (PI) included
+    - No client data included
+    - No confidential company data included
+    - No social media data included
+    - All data is synthetic or from public sources (NOAA, BTS, OpenStreetMap, CDC)
+    - Public sources and usage terms are documented in DATA_SOURCES.md
+    - No API keys or credentials in repository
+    - Gitleaks scan performed before submission
+
+  repository_url: "[NEEDS INPUT: GitHub repository URL]"
+
+  video_demo_url: "[NEEDS INPUT: YouTube or video hosting URL]"
+
+  deployment_instructions: |
+    Quick start:
+    ```bash
+    cp .env.example .env
+    docker compose up --build
+    ```
+
+    Access:
+    - Frontend: http://localhost:5173
+    - Backend API: http://localhost:8000
+    - API Docs: http://localhost:8000/docs
+
+    Offline demo mode:
+    ```bash
+    DEMO_MODE=true \
+    WATSONX_ENABLED=false \
+    NETWORK_REQUIRED=false \
+    docker compose up --build
+    ```
+
+    Preflight check:
+    ```bash
+    docker compose run --rm backend python scripts/preflight_demo.py
+    ```
+
+  evaluation_metrics:
+    - "Affected shipment classification F1: 0.90+ on synthetic ground truth"
+    - "Cold-chain excursion recall: 0.98+"
+    - "Cold-chain false-positive rate: <0.05"
+    - "Route hard-constraint violations: 0%"
+    - "Feasible route alternatives generated: 3+ when feasible"
+    - "Offline scenario processing time: <2 seconds for 500 shipments"
+    - "API p95 (excluding LLM explanation): <500 ms"
+    - "AI explanation timeout: 2.5 seconds with deterministic fallback"
+    - "Recommendations with evidence links: 100%"
+    - "Recommendations with reason codes: 100%"
+    - "Time from scenario activation to action plan: <60 seconds"
+    - "Demo mode external dependencies: 0"
+
+  known_limitations: |
+    - Regulatory scope: The system uses configurable policy profiles for cold-chain classification. Demo profiles are based on CDC vaccine storage guidelines but are not authoritative for any specific product or jurisdiction.
+    - Offline routing: Route alternatives are generated from a cached graph; live traffic and real-time carrier availability are not integrated.
+    - Explanation latency: Granite explanations have a 2.5-second timeout; if watsonx.ai is unavailable, the system falls back to deterministic templates.
+    - Synthetic data: All demo scenarios use synthetic shipments, assets, and sensor logs. No real customer, client, or personal data is included.
+    - Deployment: The system is designed for local deployment. Cloud services (watsonx.ai, Cloudant) are optional and not required for the core demo.
+
+  future_roadmap: |
+    - Integration with live carrier APIs for real-time availability and pricing
+    - Real-time traffic and weather data integration
+    - Multi-modal optimization (truck, rail, sea, air)
+    - Predictive disruption detection using historical patterns
+    - Manufacturer stability window integration for cold-chain products
+    - Regulatory compliance reporting and audit trails
+    - Mobile app for field operations
+    - Integration with TMS and WMS systems

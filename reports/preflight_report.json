@@ -1,0 +1,110 @@
+{
+  "run_id": "f30c478d-836f-4391-ab86-ebbec0b6af21",
+  "generated_at": "2026-09-15T03:20:11.484715+00:00",
+  "env": {
+    "DEMO_MODE": "(unset)",
+    "WATSONX_ENABLED": "(unset)",
+    "NETWORK_REQUIRED": "(unset)"
+  },
+  "summary": {
+    "PASS": 5,
+    "FAIL": 0,
+    "WARN": 0,
+    "SKIP": 0
+  },
+  "total_duration_ms": 821.08,
+  "checks": [
+    {
+      "check_id": "CHK-1",
+      "name": "DuckDB connection + synthetic schema",
+      "status": "PASS",
+      "duration_ms": 107.9854000126943,
+      "reason_codes": [],
+      "detail": "in-memory schema created, seeded, and referentially validated",
+      "evidence": {
+        "shipments": 1,
+        "sensor_readings": 5
+      }
+    },
+    {
+      "check_id": "CHK-2",
+      "name": "NetworkX route overlap (Impact Engine)",
+      "status": "PASS",
+      "duration_ms": 691.4290999993682,
+      "reason_codes": [
+        "PORT_NODE_BLOCKED"
+      ],
+      "detail": "graph overlap + time-window matching correctly isolated the affected shipment",
+      "evidence": {
+        "affected_shipments": [
+          "SHP-0042"
+        ],
+        "graph_nodes": 4,
+        "graph_edges": 4
+      }
+    },
+    {
+      "check_id": "CHK-3",
+      "name": "OR-Tools routing feasibility (Optimization Engine)",
+      "status": "PASS",
+      "duration_ms": 21.58259996213019,
+      "reason_codes": [
+        "CAPACITY_OK",
+        "REEFER_CAPACITY_AVAILABLE"
+      ],
+      "detail": "CP-SAT found a feasible, constraint-respecting assignment on the first try",
+      "evidence": {
+        "assignment": {
+          "SHP-0042": "CARRIER-B",
+          "SHP-0099": "CARRIER-A"
+        },
+        "solver_status": "OPTIMAL"
+      }
+    },
+    {
+      "check_id": "CHK-4",
+      "name": "Cold-chain policy evaluation, 2-8C profile",
+      "status": "PASS",
+      "duration_ms": 0.041300023440271616,
+      "reason_codes": [
+        "TEMPERATURE_EXPOSURE_INCREASED",
+        "EXCURSION_REVIEW"
+      ],
+      "detail": "reference excursion scenario -> EXCURSION_REVIEW (max 10.4C, ~18min out of range); POLICY_REQUIRED, URGENT_ESCALATION and SAFE paths all verified",
+      "evidence": {
+        "max_c": 10.4,
+        "min_c": 6.4,
+        "duration_minutes": 18,
+        "out_of_range_readings": 3
+      }
+    },
+    {
+      "check_id": "CHK-5",
+      "name": "Deterministic fallback explanation",
+      "status": "PASS",
+      "duration_ms": 0.04160002572461963,
+      "reason_codes": [
+        "PORT_NODE_BLOCKED",
+        "ETA_SLA_BREACH"
+      ],
+      "detail": "deterministic fallback produced a schema-complete explanation in 0.01ms. WATSONX_ENABLED=false -- this is the live path for every explanation right now",
+      "evidence": {
+        "summary": "SHP-0042 affected by PORT_STRIKE_01.",
+        "why_affected": [
+          "Flagged due to PORT_NODE_BLOCKED",
+          "Flagged due to ETA_SLA_BREACH"
+        ],
+        "recommended_action": "Reroute via Carrier B: +5.4h, +$1800 vs. current plan",
+        "evidence": [
+          "PORT_NODE_BLOCKED",
+          "ETA_SLA_BREACH"
+        ],
+        "uncertainties": [
+          "Cold-chain status is EXCURSION_REVIEW; requires manual review before disposition."
+        ],
+        "generated_by": "deterministic_fallback_template",
+        "model_used": null
+      }
+    }
+  ]
+}

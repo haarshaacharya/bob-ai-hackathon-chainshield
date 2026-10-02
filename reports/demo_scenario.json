@@ -1,0 +1,131 @@
+{
+  "disruption_id": "DISR-PORT-STRIKE-01",
+  "affected_shipment_ids": [
+    "SHP-001",
+    "SHP-004"
+  ],
+  "cargo_value_at_risk_usd": 860000.0,
+  "impact_reason_codes": [
+    "PORT_NODE_BLOCKED",
+    "ROUTE_EDGE_BLOCKED",
+    "ETA_SLA_BREACH",
+    "TEMPERATURE_EXPOSURE_INCREASED"
+  ],
+  "cold_chain_severity": "EXCURSION_REVIEW",
+  "cold_chain_reason_codes": [
+    "TEMPERATURE_ABOVE_MAX"
+  ],
+  "cold_chain_duration_minutes": 18.0,
+  "cold_chain_max_celsius": 10.4,
+  "feasible_alternatives_count": 1,
+  "rejected_alternatives_count": 3,
+  "idle_compatible_assets": [
+    "ASSET-REEFER-01"
+  ],
+  "evidence_record_count": 4,
+  "explanation_generated_by": "deterministic_fallback_template",
+  "all_reason_codes": [
+    "PORT_NODE_BLOCKED",
+    "ROUTE_EDGE_BLOCKED",
+    "ETA_SLA_BREACH",
+    "TEMPERATURE_EXPOSURE_INCREASED",
+    "TEMPERATURE_ABOVE_MAX",
+    "REEFER_REQUIRED",
+    "ROUTE_NODE_BLOCKED"
+  ],
+  "scenario_passed": true,
+  "failure_reasons": [],
+  "action_plan_json": {
+    "disruption_id": "DISR-PORT-STRIKE-01",
+    "generated_at": "2026-09-15T02:54:01.366783+00:00",
+    "solver_status": "OPTIMAL",
+    "shipments": [
+      {
+        "shipment_id": "SHP-001",
+        "disruption_id": "DISR-PORT-STRIKE-01",
+        "reason_codes": [
+          "PORT_NODE_BLOCKED",
+          "ROUTE_EDGE_BLOCKED",
+          "ETA_SLA_BREACH",
+          "TEMPERATURE_EXPOSURE_INCREASED"
+        ],
+        "cargo_value_usd": 520000.0,
+        "cold_chain_severity": "EXCURSION_REVIEW",
+        "cold_chain_reason_codes": [
+          "TEMPERATURE_ABOVE_MAX"
+        ],
+        "route_alternatives": [
+          {
+            "alternative_id": "ASSET-REEFER-01|HUB-B->DEPOT-X->HUB-C->HUB-D",
+            "asset_id": "ASSET-REEFER-01",
+            "carrier_id": "CARRIER-A",
+            "path": [
+              "HUB-B",
+              "DEPOT-X",
+              "HUB-C",
+              "HUB-D"
+            ],
+            "mode": "sea",
+            "total_cost_usd": 1550.0,
+            "eta_delta_hours": -28.0,
+            "is_feasible": true,
+            "reason_codes": [],
+            "rank": 1
+          }
+        ],
+        "rejected_alternatives": [
+          {
+            "alternative_id": "ASSET-REEFER-01|HUB-B->PORT-03->HUB-D",
+            "asset_id": "ASSET-REEFER-01",
+            "reason_codes": [
+              "ROUTE_EDGE_BLOCKED",
+              "ROUTE_NODE_BLOCKED"
+            ]
+          },
+          {
+            "alternative_id": "ASSET-TRUCK-02|HUB-B->HUB-D",
+            "asset_id": "ASSET-TRUCK-02",
+            "reason_codes": [
+              "REEFER_REQUIRED"
+            ]
+          },
+          {
+            "alternative_id": "ASSET-TRUCK-03|HUB-B->HUB-D",
+            "asset_id": "ASSET-TRUCK-03",
+            "reason_codes": [
+              "REEFER_REQUIRED"
+            ]
+          }
+        ],
+        "rejection_reason_codes": [
+          "REEFER_REQUIRED",
+          "ROUTE_EDGE_BLOCKED",
+          "ROUTE_NODE_BLOCKED"
+        ],
+        "explanation": {
+          "summary": "SHP-001 is affected by DISR-PORT-STRIKE-01.",
+          "why_affected": [
+            "Flagged due to PORT_NODE_BLOCKED",
+            "Flagged due to ROUTE_EDGE_BLOCKED",
+            "Flagged due to ETA_SLA_BREACH",
+            "Flagged due to TEMPERATURE_EXPOSURE_INCREASED"
+          ],
+          "recommended_action": "Reroute via CARRIER-A: +-28.0h, +$1550.0 vs. current plan.",
+          "evidence": [
+            "PORT_NODE_BLOCKED",
+            "ROUTE_EDGE_BLOCKED",
+            "ETA_SLA_BREACH",
+            "TEMPERATURE_EXPOSURE_INCREASED"
+          ],
+          "uncertainties": [
+            "Cold-chain status is EXCURSION_REVIEW; requires manual review before disposition."
+          ],
+          "generated_by": "deterministic_fallback_template",
+          "model_used": null
+        }
+      }
+    ],
+    "evidence_record_count": 4
+  },
+  "action_plan_markdown": "# Action Plan \u2014 Disruption DISR-PORT-STRIKE-01\n_Generated at 2026-09-15T02:54:01.366783+00:00_\n\n## Shipment SHP-001\n- **Reason codes:** PORT_NODE_BLOCKED, ROUTE_EDGE_BLOCKED, ETA_SLA_BREACH, TEMPERATURE_EXPOSURE_INCREASED\n- **Cargo value at risk:** $520,000\n- **Cold-chain severity:** EXCURSION_REVIEW\n- **Cold-chain reason codes:** TEMPERATURE_ABOVE_MAX\n\n### Feasible route alternatives\n  1. ASSET-REEFER-01 via HUB-B \u2192 DEPOT-X \u2192 HUB-C \u2192 HUB-D (+-28.0h, $1,550)\n\n### Rejected alternatives\n  - ASSET-REEFER-01: ROUTE_EDGE_BLOCKED, ROUTE_NODE_BLOCKED\n  - ASSET-TRUCK-02: REEFER_REQUIRED\n  - ASSET-TRUCK-03: REEFER_REQUIRED\n\n### Explanation (deterministic fallback)\n> SHP-001 is affected by DISR-PORT-STRIKE-01.\n> **Recommended action:** Reroute via CARRIER-A: +-28.0h, +$1550.0 vs. current plan."
+}
